@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Home Inauguration Invitation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { margin:0; font-family:'Poppins',sans-serif; background: linear-gradient(135deg,#1e1e1e,#000); color:white; overflow:hidden; perspective:1200px; }
+.center { display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; }
+input { padding:12px; border-radius:12px; border:3px solid gold; margin:10px; width:250px; text-align:center; font-size:16px; background: rgba(0,0,0,0.7); color:white; box-shadow: 0 0 20px gold, 0 0 40px rgba(255,215,0,0.5); }
+.btn { padding:10px 30px; border-radius:25px; background:gold; color:black; font-weight:bold; cursor:pointer; box-shadow: 0 0 20px gold; transition:0.3s; margin:5px; }
+.btn:hover { background:#ffdc73; }
+.house-box { position:relative; width:90%; max-width:450px; transform-style: preserve-3d; transition: transform 2s ease-in-out; }
+.house-zoom { transform: scale(1.5) translateZ(200px); }
+.house-img { width:100%; border-radius:15px; }
+.heaven { position:absolute; top:-10%; left:-10%; width:120%; height:120%; display:flex; z-index:10; }
+.door { width:50%; height:100%; background: linear-gradient(145deg,#5a2e0f,#8b4513,#5a2e0f); border:3px solid #caa64b; transition: transform 2s, box-shadow 1.5s; position:relative; box-shadow:0 0 20px rgba(255,215,0,0);}
+.door-glow { animation: doorGlow 1.5s infinite alternate; }
+@keyframes doorGlow {
+  0% { box-shadow:0 0 20px rgba(255,215,0,0.2),0 0 40px rgba(255,215,0,0.1);}
+  50% { box-shadow:0 0 35px rgba(255,215,0,0.8),0 0 60px rgba(255,215,0,0.4);}
+  100% { box-shadow:0 0 20px rgba(255,215,0,0.2),0 0 40px rgba(255,215,0,0.1);}
+}
+.handle { position:absolute; width:20px; height:20px; background:gold; border-radius:50%; top:50%; transform:translateY(-50%);}
+.left .handle { right:15px; } .right .handle { left:15px; }
+.left { transform-origin:left; } .right { transform-origin:right; }
+.open-left { transform: rotateY(-135deg); }
+.open-right { transform: rotateY(135deg); }
+.light { position:absolute; inset:0; background: radial-gradient(circle, rgba(255,255,255,0.8), transparent); opacity:0; transition:1.5s; }
+.light-show { opacity:1; }
+.hidden { display:none; }
+.card { background: rgba(0,0,0,0.85); padding:25px; border-radius:20px; text-align:center; max-width:400px; border:3px solid gold; box-shadow:0 0 30px gold,0 0 50px rgba(255,215,0,0.3);}
+h1 { color:white; } h3 { color:#caa64b; }
+.name-highlight { background:black; padding:6px 12px; border-radius:10px; display:inline-block; border:2px solid gold; box-shadow:0 0 15px gold,0 0 30px rgba(255,215,0,0.5); animation: glow 1.5s infinite alternate, sparkle 2s infinite linear;}
+@keyframes glow {
+  0% { text-shadow:0 0 10px gold,0 0 20px gold,0 0 30px gold; }
+  50% { text-shadow:0 0 20px gold,0 0 40px gold,0 0 60px gold; }
+  100% { text-shadow:0 0 10px gold,0 0 20px gold,0 0 30px gold; }
+}
+@keyframes sparkle {
+  0%,100% { text-shadow:0 0 10px gold,2px 2px 20px #fff,-2px -2px 20px #ff0; }
+  25% { text-shadow:0 0 15px gold,3px -3px 25px #fff,-3px 3px 25px #ff0; }
+  50% { text-shadow:0 0 20px gold,4px 4px 30px #fff,-4px -4px 30px #ff0; }
+  75% { text-shadow:0 0 15px gold,-4px 4px 25px #fff,4px -4px 25px #ff0; }
+}
+</style>
+</head>
+<body>
+<audio id="music" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+<div class="center" id="frameName">
+  <h2>🙏 Welcome</h2>
+  <input type="text" id="username" placeholder="Enter Your Name">
+  <div class="btn" onclick="nextFrame('name')">Next</div>
+</div>
+
+<div class="center hidden" id="framePhone">
+  <h2>📱 Enter Your Phone Number</h2>
+  <input type="text" id="phone" placeholder="Enter Phone Number (+91XXXXXXXXXX)">
+  <div class="btn" onclick="nextFrame('phone')">Next</div>
+</div>
+
+<div class="center hidden" id="frameLang">
+  <h2>🌐 Select Language</h2>
+  <div id="langButtons" class="hidden">
+    <div class="btn" onclick="startInvite('en')">English</div>
+    <div class="btn" onclick="startInvite('kn')">Kannada</div>
+    <div class="btn" onclick="startInvite('te')">Telugu</div>
+  </div>
+  <div class="btn" id="showLangBtn" onclick="showLanguages()">Select Language</div>
+</div>
+
+<div class="center hidden" id="homePage">
+  <div class="house-box" id="houseBox">
+    <img src="house.jpg" class="house-img">
+    <div class="light" id="light"></div>
+    <div class="heaven">
+      <div class="door left" id="leftDoor"><div class="handle"></div></div>
+      <div class="door right" id="rightDoor"><div class="handle"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="center hidden" id="detailsPage">
+  <div class="card" id="invitationCard">
+    <h1 id="invH1"></h1>
+    <p id="greetingText"><span class="name-highlight" id="guestName"></span></p>
+    <p id="invText"></p>
+    <h3 id="homeTitle"></h3>
+    <p id="inviter1"></p>
+    <p id="inviter2"></p>
+    <p id="invDate"></p>
+    <p id="invTime"></p>
+    <p id="invBless"></p>
+    <p id="invJoy"></p>
+    <a class="btn hidden" id="whatsappBtn" target="_blank">📲 WhatsApp Map</a>
+    <h2 id="thankYou" class="hidden"></h2>
+  </div>
+</div>
+
+<script>
+const texts = {
+  en:{h1:"Home Inauguration Invitation", invite:"With the blessings of God, we warmly invite you to our new home inauguration ceremony in Bagepalli.", home:"Our Sweet Home", inviter1:"Ramakrishnappa & Gangarathnamma", inviter2:"Narasimhappa & Naagamma", date:"📅 10 April 2026", time:"⏰ 10:30 AM", bless:"May this home be filled with prosperity, happiness, and divine blessings.", joy:"Your presence will bring joy and make this day memorable.", thankyou:"🙏 Thank You!"},
+  kn:{h1:"ಮನೆಯ ಉದ್ಘಾಟನೆ ಆಹ್ವಾನ", invite:"ದೇವರ ಆಶೀರ್ವಾದದೊಂದಿಗೆ, ನಾವು ನಿಮಗೆ ನಮ್ಮ ಹೊಸ ಮನೆ ಪ್ರವೇಶ ಸಮಾರಂಭಕ್ಕೆ ಆತ್ಮೀಯವಾಗಿ ಆಹ್ವಾನಿಸುತ್ತೇವೆ ಬಾಗೇಪಳ್ಳಿ ನಲ್ಲಿ.", home:"ನಮ್ಮ ಸುಂದರ ಮನೆ", inviter1:"ರಾಮಕೃಷ್ಣಪ್ಪ & ಗಂಗಾರತ್ನಮ್ಮ", inviter2:"ನರಸಿಂಹಪ್ಪ & ನಾಗಮ್ಮ", date:"📅 10 ಏಪ್ರಿಲ್ 2026", time:"⏰ 10:30 AM", bless:"ಈ ಮನೆ ಸಂತೋಷ, ಸಮೃದ್ಧಿ ಮತ್ತು ದೇವರ ಆಶೀರ್ವಾದದಿಂದ ತುಂಬಿರಲಿ.", joy:"ನಿಮ್ಮ ಉಪಸ್ಥಿತಿಯಿಂದ ಈ ದಿನವು ಇನ್ನಷ್ಟು ಸಂತೋಷದಾಯಕವಾಗಲಿದೆ.", thankyou:"🙏 ಧನ್ಯವಾದಗಳು!"},
+  te:{h1:"ఇంటి ప్రారంభ ఆహ్వానం", invite:"దేవుని ఆశీర్వాదంతో, మేము మీకు మా కొత్త ఇంటి ప్రారంభ వేడుకకు హృదయపూర్వక ఆహ్వానం అందిస్తున్నాము బాగేపల్లి లో.", home:"మా అందమైన ఇల్లు", inviter1:"రామకృష్ణప్ప & గంగారత్నమ్మ", inviter2:"నరసింహప్ప & నాగమ్మ", date:"📅 10 ఏప్రిల్ 2026", time:"⏰ 10:30 AM", bless:"ఈ ఇల్లు సంతోషం, సంపద మరియు దైవ ఆశీర్వాదంతో నిండిపోవాలని కోరుకుంటున్నాము.", joy:"మీరు రావడం ద్వారా ఈ రోజు మరింత సంతోషంగా మారుతుంది.", thankyou:"🙏 ధన్యవాదాలు!"}
+};
+
+let selectedLang="en"; 
+let guestName=""; 
+let guestPhone="";
+
+function nextFrame(frame){
+  if(frame==='name'){
+    guestName=document.getElementById("username").value.trim();
+    if(!guestName){ alert("Please enter your name"); return; }
+    document.getElementById("frameName").classList.add("hidden");
+    document.getElementById("framePhone").classList.remove("hidden");
+  } else if(frame==='phone'){
+    const phone=document.getElementById("phone").value.trim();
+    const regex=/^(\+91)?[6-9]\d{9}$/;
+    if(!regex.test(phone)){ alert("Your number is incorrect"); return; }
+    guestPhone=phone.replace("+91","");
+    document.getElementById("framePhone").classList.add("hidden");
+    document.getElementById("frameLang").classList.remove("hidden");
+  }
+}
+
+function showLanguages(){
+  document.getElementById("langButtons").classList.remove("hidden");
+  document.getElementById("showLangBtn").classList.add("hidden");
+}
+
+function startInvite(lang){
+  selectedLang=lang;
+
+  document.getElementById("guestName").innerText=guestName;
+  document.getElementById("greetingText").innerHTML="Dear <span class='name-highlight'>"+guestName+"</span>";
+  document.getElementById("invH1").innerText=texts[lang].h1;
+  document.getElementById("invText").innerText=texts[lang].invite;
+  document.getElementById("homeTitle").innerText=texts[lang].home;
+  document.getElementById("inviter1").innerText=texts[lang].inviter1;
+  document.getElementById("inviter2").innerText=texts[lang].inviter2;
+  document.getElementById("invDate").innerText=texts[lang].date;
+  document.getElementById("invTime").innerText=texts[lang].time;
+  document.getElementById("invBless").innerText=texts[lang].bless;
+  document.getElementById("invJoy").innerText=texts[lang].joy;
+  document.getElementById("thankYou").innerText=texts[lang].thankyou;
+
+  document.getElementById("frameLang").classList.add("hidden");
+  const houseBox=document.getElementById("houseBox");
+  document.getElementById("homePage").classList.remove("hidden");
+
+  document.getElementById("leftDoor").classList.add("door-glow");
+  document.getElementById("rightDoor").classList.add("door-glow");
+
+  setTimeout(()=>{
+    document.getElementById("music").play();
+    document.getElementById("leftDoor").classList.add("open-left");
+    document.getElementById("rightDoor").classList.add("open-right");
+    document.getElementById("light").classList.add("light-show");
+    houseBox.classList.add("house-zoom");
+  },1000);
+
+  setTimeout(()=>{
+    document.getElementById("homePage").classList.add("hidden");
+    document.getElementById("detailsPage").classList.remove("hidden");
+    const whatsappBtn=document.getElementById("whatsappBtn");
+    whatsappBtn.classList.remove("hidden");
+    whatsappBtn.href="https://wa.me/"+guestPhone+"?text="+encodeURIComponent("Hello! Here is the home inauguration location: https://maps.google.com/?q=13.7833417,77.8098028");
+  },3000);
+}
+</script>
+</body>
+  </html>
